@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Carmen Opera Trivia Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        .feedback {
+            color: #e63946;
+        }
+        .correct {
+            color: #2a9d8f;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Advanced Carmen Opera Trivia Game</h1>
+    <p>Test your in-depth knowledge of Bizet's masterpiece "Carmen"! Each question requires a keen understanding of the opera's plot, characters, and background.</p>
+
+    <div id="quiz-container">
+        <div id="question-container"></div>
+        <div class="result" id="result"></div>
+    </div>
+    <button onclick="nextQuestion()" id="next-button" style="display:none">Next Question</button>
+    <button onclick="startQuiz()" id="start-button">Start Quiz</button>
+
+    <script>
+        const questions = [
+            {
+                question: "In what year did Bizet's opera 'Carmen' first premiere?",
+                options: ["1865", "1875", "1882", "1890"],
+                correctAnswer: 1,
+                explanation: "'Carmen' premiered in 1875 at the Opéra-Comique in Paris, initially receiving mixed reviews."
+            },
+            {
+                question: "What is the title of the famous prelude that opens 'Carmen'?",
+                options: ["La Habanera", "Les Toreadors", "Entr'acte", "Seguidilla"],
+                correctAnswer: 1,
+                explanation: "The opera opens with the prelude 'Les Toreadors,' a lively piece that foreshadows the themes of bullfighting and fate."
+            },
+            {
+                question: "What major symbol of Carmen's independence and rebellion does she frequently wear?",
+                options: ["A red dress", "A flower in her hair", "Gold earrings", "A gypsy scarf"],
+                correctAnswer: 1,
+                explanation: "Carmen often wears a red flower in her hair, symbolizing her passion and free spirit, which draws Don José’s fascination."
+            },
+            {
+                question: "How does Carmen escape her captor in Act 1?",
+                options: ["She bribes him with gold", "She sings and charms her way out", "She tricks him with a dance", "She stabs him and runs away"],
+                correctAnswer: 2,
+                explanation: "Carmen seduces Don José by dancing and singing the 'Seguidilla,' persuading him to let her escape."
+            },
+            {
+                question: "Which of these is NOT a theme explored in 'Carmen'?",
+                options: ["Freedom vs. conformity", "Love as fate", "Political revolution", "Jealousy and obsession"],
+                correctAnswer: 2,
+                explanation: "While 'Carmen' deals with themes of love, freedom, and jealousy, it does not address political revolution directly."
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        function startQuiz() {
+            document.getElementById('start-button').style.display = 'none';
+            document.getElementById('next-button').style.display = 'block';
+            score = 0;
+            currentQuestionIndex = 0;
+            displayQuestion();
+        }
+
+        function displayQuestion() {
+            const questionContainer = document.getElementById('question-container');
+            questionContainer.innerHTML = '';
+
+            const question = questions[currentQuestionIndex];
+            const questionElement = document.createElement('div');
+            questionElement.className = 'question';
+            questionElement.innerHTML = `<p>${question.question}</p>`;
+            questionContainer.appendChild(questionElement);
+
+            question.options.forEach((option, index) => {
+                const optionContainer = document.createElement('div');
+                optionContainer.className = 'option';
+
+                const radioInput = document.createElement('input');
+                radioInput.type = 'radio';
+                radioInput.name = 'answer';
+                radioInput.value = index;
+                radioInput.id = `option${index}`;
+
+                const label = document.createElement('label');
+                label.htmlFor = `option${index}`;
+                label.innerText = option;
+
+                optionContainer.appendChild(radioInput);
+                optionContainer.appendChild(label);
+                questionContainer.appendChild(optionContainer);
+            });
+        }
+
+        function checkAnswer() {
+            const selectedOption = document.querySelector('input[name="answer"]:checked');
+            const resultContainer = document.getElementById('result');
+            resultContainer.innerHTML = '';
+
+            if (!selectedOption) {
+                alert("Please select an answer before proceeding.");
+                return;
+            }
+
+            const selectedIndex = parseInt(selectedOption.value);
+            const question = questions[currentQuestionIndex];
+
+            if (selectedIndex === question.correctAnswer) {
+                score++;
+                resultContainer.innerHTML = `<p class="correct">Correct! 🎉</p>`;
+            } else {
+                resultContainer.innerHTML = `<p class="feedback">Incorrect. ${question.explanation}</p>`;
+            }
+
+            currentQuestionIndex++;
+            document.getElementById('next-button').style.display = currentQuestionIndex < questions.length ? 'block' : 'none';
+
+            if (currentQuestionIndex >= questions.length) {
+                endQuiz();
+            }
+        }
+
+        function nextQuestion() {
+            checkAnswer();
+            if (currentQuestionIndex < questions.length) {
+                document.getElementById('result').innerHTML = '';
+                displayQuestion();
+            }
+        }
+
+        function endQuiz() {
+            const questionContainer = document.getElementById('question-container');
+            questionContainer.innerHTML = `<p>You answered ${score} out of ${questions.length} questions correctly.</p>`;
+            document.getElementById('next-button').style.display = 'none';
+            document.getElementById('start-button').style.display = 'block';
+            document.getElementById('start-button').innerText = 'Play Again';
+        }
+    </script>
+</body>
+</html>
